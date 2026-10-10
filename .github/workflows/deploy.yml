@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}
-  S3_BUCKET: ${{ secrets.S3_BUCKET }}
+  AWS_REGION: eu-north-1
+  S3_BUCKET: ankit-devops-cicd-site-569498795435
   CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
 
 jobs:
@@ -74,6 +74,7 @@ jobs:
         run: aws s3 sync dist/ "s3://${S3_BUCKET}" --delete
 
       - name: Invalidate CloudFront cache
+        if: ${{ env.CLOUDFRONT_DISTRIBUTION_ID != '' }}
         run: |
           aws cloudfront create-invalidation \
             --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" \
